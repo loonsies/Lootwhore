@@ -56,10 +56,25 @@ bool Lootwhore::Initialize(IAshitaCore* core, ILogManager* logger, const uint32_
     pPacket      = new safePacketInjector(core->GetPacketManager());
 
     mSettings    = Settings_t();
+    
+    // Initialize UI variables
+    m_ShowUI = false;
+    m_SelectedProfileIndex = 0;
+    memset(m_NewProfileName, 0, sizeof(m_NewProfileName));
+    m_CurrentTab = 0;
+    m_ShowCreateProfileModal = false;
+    m_ProfileNameAlreadyExists = false;
+    
+    // Initialize item preview and search
+    m_SelectedItemId = 0;
+    memset(m_SearchBuffer, 0, sizeof(m_SearchBuffer));
+    m_ShowItemPreview = false;
+    
     InitializeCommands();
     InitializeState();
     LoadDefaultSettings(true);
     LoadDefaultProfile(true);
+    LoadProfileList();
 
     return true;
 }
@@ -168,6 +183,11 @@ void Lootwhore::InitializeCommands()
     build.help.command     = "/lw help [Optional: command]";
     build.help.description = "Print information on a command.  If no command is specified, a list of commands will be printed.";
     mCommandMap.insert(std::make_pair("help", build));
+
+    build.handler          = &Lootwhore::HandleCommandUI;
+    build.help.command     = "/lw ui";
+    build.help.description = "Toggle the ImGui user interface.";
+    mCommandMap.insert(std::make_pair("ui", build));
 }
 
 void Lootwhore::InitializeState()

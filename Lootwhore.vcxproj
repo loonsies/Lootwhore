@@ -172,6 +172,7 @@ cd build
     <ClCompile Include="logic.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="packets.cpp" />
+    <ClCompile Include="ui.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\Output.h" />

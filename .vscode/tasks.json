@@ -1,0 +1,19 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+    {
+      "args": [
+        "Lootwhore.sln",
+        "/p:Configuration=Release",
+        "/p:Platform=Win32"
+      ],
+      "command": "msbuild",
+      "group": "build",
+      "label": "Build Lootwhore Plugin",
+      "problemMatcher": [
+        "$msCompile"
+      ],
+      "type": "shell"
+    }
+  ]
+}

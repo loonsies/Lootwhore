@@ -5,11 +5,11 @@
 #pragma once
 #endif
 
-#include "C:\Users\Garre\FFXI\Ashita 4\plugins\sdk\Ashita.h"
-#include "..\common\Utilities.h"
-#include "..\common\Output.h"
-#include "..\common\Settings.h"
-#include "..\common\safePacketInjector.h"
+#include "G:\Ashita\plugins\sdk\ashita.h"
+#include "common\Utilities.h"
+#include "common\Output.h"
+#include "common\Settings.h"
+#include "common\safePacketInjector.h"
 #include "Structs.h"
 #include <random>
 
@@ -19,6 +19,7 @@ private:
     IAshitaCore* m_AshitaCore;
     ILogManager* m_LogManager;
     uint32_t m_PluginId;
+    IDirect3DDevice8* m_Device; // Pointer to the games Direct3D device object.
     OutputHelpers* pOutput;
     SettingsHelper* pSettings;
     safePacketInjector* pPacket;
@@ -37,6 +38,22 @@ private:
     std::map<string, CommandInformation, cistringcmp> mCommandMap;
     std::default_random_engine mRandomEngine;
     std::uniform_int_distribution<int32_t> mRandomDistribution;
+
+    // UI related members
+    bool m_ShowUI;
+    int m_SelectedProfileIndex;
+    char m_NewProfileName[256];
+    int m_CurrentTab;
+    std::vector<std::string> m_ProfileList;
+    
+    // Modal state for new profile creation
+    bool m_ShowCreateProfileModal;
+    bool m_ProfileNameAlreadyExists;
+    
+    // Item preview and search functionality
+    uint16_t m_SelectedItemId;
+    char m_SearchBuffer[256];
+    bool m_ShowItemPreview;
 
 public:
     const char* GetName(void) const override
@@ -65,7 +82,7 @@ public:
     }
     uint32_t GetFlags(void) const override
     {
-        return (uint32_t)Ashita::PluginFlags::Legacy;
+        return (uint32_t)(Ashita::PluginFlags::Legacy | Ashita::PluginFlags::UseDirect3D);
     }
 	
     //main.cpp
@@ -95,6 +112,7 @@ public:
     void HandleCommandLot(std::vector<string> args, int argcount, CommandHelp help);
     void HandleCommandPass(std::vector<string> args, int argcount, CommandHelp help);
     void HandleCommandHelp(std::vector<string> args, int argcount, CommandHelp help);
+    void HandleCommandUI(std::vector<string> args, int argcount, CommandHelp help);
     void PrintHelpText(CommandHelp help, bool description);
 
     //fileio.cpp
@@ -127,5 +145,31 @@ public:
     void MergeItems(Ashita::FFXI::item_t* source, Ashita::FFXI::item_t* destination);
     void StoreItem(int* FreeSpace, Ashita::FFXI::item_t* item);
     void checkBags();
+
+    //ui.cpp - ImGui interface methods
+    void RenderUI();
+    void LoadProfileList();
+    void CreateNewProfile();
+    void DeleteSelectedProfile();
+    void SaveCurrentProfile();
+    void RenderProfileControls();
+    void RenderCreateProfileModal();
+    void RenderLootPoolTab();
+    void RenderAutoDropTab();
+    void RenderIgnoreTab();
+    void RenderLotTab();
+    void RenderPassTab();
+    void RenderItemPreview();
+    void RenderSearchBar(const char* hint, std::function<void(const char*)> onItemSelected);
+
+    auto Direct3DInitialize(IDirect3DDevice8* device) -> bool override;
+    auto Direct3DBeginScene(bool isRenderingBackBuffer) -> void override;
+    auto Direct3DEndScene(bool isRenderingBackBuffer) -> void override;
+    auto Direct3DPresent(const RECT* pSourceRect, const RECT* pDestRect, HWND hDestWindowOverride, const RGNDATA* pDirtyRegion) -> void override;
+    auto Direct3DSetRenderState(D3DRENDERSTATETYPE State, DWORD* Value) -> bool override;
+    auto Direct3DDrawPrimitive(D3DPRIMITIVETYPE PrimitiveType, UINT StartVertex, UINT PrimitiveCount) -> bool override;
+    auto Direct3DDrawIndexedPrimitive(D3DPRIMITIVETYPE PrimitiveType, UINT minIndex, UINT NumVertices, UINT startIndex, UINT primCount) -> bool override;
+    auto Direct3DDrawPrimitiveUP(D3DPRIMITIVETYPE PrimitiveType, UINT PrimitiveCount, CONST void* pVertexStreamZeroData, UINT VertexStreamZeroStride) -> bool override;
+    auto Direct3DDrawIndexedPrimitiveUP(D3DPRIMITIVETYPE PrimitiveType, UINT MinVertexIndex, UINT NumVertexIndices, UINT PrimitiveCount, CONST void* pIndexData, D3DFORMAT IndexDataFormat, CONST void* pVertexStreamZeroData, UINT VertexStreamZeroStride) -> bool override;
 };
 #endif

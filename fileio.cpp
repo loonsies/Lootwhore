@@ -1,5 +1,5 @@
 #include "Lootwhore.h"
-#include "..\common\thirdparty\rapidxml.hpp"
+#include "common\thirdparty\rapidxml.hpp"
 using namespace rapidxml;
 
 void Lootwhore::LoadDefaultSettings(bool forceReload)

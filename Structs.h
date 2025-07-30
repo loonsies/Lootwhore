@@ -103,12 +103,14 @@ struct TreasurePoolSlot_t
     LotState Status;
     uint16_t PacketAttempts;
     std::chrono::steady_clock::time_point Lockout;
+    std::chrono::steady_clock::time_point EntryTime;
 
     TreasurePoolSlot_t()
         : Id(0)
         , Status(LotState::Untouched)
         , PacketAttempts(0)
         , Lockout(std::chrono::steady_clock::now())
+        , EntryTime(std::chrono::steady_clock::now())
     {}
 
     TreasurePoolSlot_t(Ashita::FFXI::treasureitem_t* pItem)
@@ -122,6 +124,7 @@ struct TreasurePoolSlot_t
             Status = LotState::Lotted;
         PacketAttempts = 0;
         Lockout        = std::chrono::steady_clock::now();
+        EntryTime      = std::chrono::steady_clock::now();
     }
 
     TreasurePoolSlot_t(uint16_t Id)
@@ -129,6 +132,7 @@ struct TreasurePoolSlot_t
         , Status(LotState::Untouched)
         , PacketAttempts(0)
         , Lockout(std::chrono::steady_clock::now())
+        , EntryTime(std::chrono::steady_clock::now())
     {}
 
     TreasurePoolSlot_t(uint16_t Id, int lockout)
@@ -136,6 +140,7 @@ struct TreasurePoolSlot_t
         , Status(LotState::Untouched)
         , PacketAttempts(0)
         , Lockout(std::chrono::steady_clock::now() + std::chrono::milliseconds(lockout))
+        , EntryTime(std::chrono::steady_clock::now())
     {}
 };
 

@@ -10,17 +10,16 @@ bool Lootwhore::HandleCommand(int32_t mode, const char* command, bool injected)
 
     if (CheckArg(0, "/lw") || CheckArg(0, "/lootwhore"))
     {
+        if (argcount == 1)
+        {
+            m_ShowUI = !m_ShowUI;
+            return true;
+        }
+        
         auto iter = mCommandMap.find(args[1]);
         if (iter == mCommandMap.end())
         {
-            if (argcount == 1)
-            {
-                pOutput->error("Command not specified.");
-            }
-            else
-            {
-                pOutput->error_f("Command not recognized. [$H%s$R]", args[1].c_str());
-            }
+            pOutput->error_f("Command not recognized. [$H%s$R]", args[1].c_str());
             return true;
         }
         (this->*(iter->second.handler))(args, argcount, iter->second.help);     
@@ -519,4 +518,13 @@ void Lootwhore::PrintHelpText(CommandHelp help, bool description)
     pOutput->message_f("$H%s", help.command.c_str());
     if (description)
         pOutput->message(help.description);
+}
+
+void Lootwhore::HandleCommandUI(std::vector<string> args, int argcount, CommandHelp help)
+{
+    UNREFERENCED_PARAMETER(args);
+    UNREFERENCED_PARAMETER(argcount);
+    UNREFERENCED_PARAMETER(help);
+    
+    m_ShowUI = !m_ShowUI;
 }
