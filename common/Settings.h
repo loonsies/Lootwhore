@@ -5,7 +5,7 @@
 #pragma once
 #endif
 
-#include "Ashita.h"
+#include "G:\Ashita\plugins\sdk\ashita.h"
 #include "Output.h"
 #include "thirdparty/rapidxml.hpp"
 #include <filesystem>

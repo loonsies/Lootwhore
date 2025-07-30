@@ -5,7 +5,7 @@
 #pragma once
 #endif
 
-#include "Ashita.h"
+#include "G:\Ashita\plugins\sdk\ashita.h"
 #include <iostream>
 #include <string>
 
