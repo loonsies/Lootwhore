@@ -54,6 +54,11 @@ private:
     uint16_t m_SelectedItemId;
     char m_SearchBuffer[256];
     bool m_ShowItemPreview;
+    
+    // Window opening tracking
+    bool m_WindowOpenedManually;
+    bool m_EnableAutoClose;
+    uint16_t m_PreviousPoolItems[10]; // Track previous pool state for detecting new items
 
 public:
     const char* GetName(void) const override
@@ -112,7 +117,6 @@ public:
     void HandleCommandLot(std::vector<string> args, int argcount, CommandHelp help);
     void HandleCommandPass(std::vector<string> args, int argcount, CommandHelp help);
     void HandleCommandHelp(std::vector<string> args, int argcount, CommandHelp help);
-    void HandleCommandUI(std::vector<string> args, int argcount, CommandHelp help);
     void PrintHelpText(CommandHelp help, bool description);
 
     //fileio.cpp
@@ -146,7 +150,7 @@ public:
     void StoreItem(int* FreeSpace, Ashita::FFXI::item_t* item);
     void checkBags();
 
-    //ui.cpp - ImGui interface methods
+    //ui.cpp
     void RenderUI();
     void LoadProfileList();
     void CreateNewProfile();
@@ -159,8 +163,16 @@ public:
     void RenderIgnoreTab();
     void RenderLotTab();
     void RenderPassTab();
+    void RenderSettingsTab();
     void RenderItemPreview();
     void RenderSearchBar(const char* hint, std::function<void(const char*)> onItemSelected);
+    
+    // UI Helpers
+    void HelpMarker(const char* desc);
+    bool HasNewItemsInPool();
+    bool AllItemsHandledOrAutomatic();
+    void UpdatePoolItemTracking();
+    int GetUnhandledItemCount();
 
     auto Direct3DInitialize(IDirect3DDevice8* device) -> bool override;
     auto Direct3DBeginScene(bool isRenderingBackBuffer) -> void override;

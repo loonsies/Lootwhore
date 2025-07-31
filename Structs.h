@@ -185,6 +185,10 @@ struct Settings_t
     int RandomDelayMin;
     int RandomDelayMax;
     bool SilentStack;
+    bool EnableAutoClose;
+    bool EnableAutoOpen;
+    bool AutoCloseWhenHandled;
+    float UIScale;
     std::list<int> ForceEnableBags;
     std::list<int> StoreBags;
     std::list<string> WhiteList;
@@ -197,6 +201,10 @@ struct Settings_t
         , SilentStack(false)
         , EnableNomadStorage(false)
         , AutoStack(true)
+        , EnableAutoClose(true)
+        , EnableAutoOpen(true)
+        , AutoCloseWhenHandled(false)
+        , UIScale(1.0f)
         , ForceEnableBags(std::list<int>())
         , StoreBags(std::list<int>{5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16})
         , WhiteList(std::list<string>())

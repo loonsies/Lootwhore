@@ -70,11 +70,22 @@ bool Lootwhore::Initialize(IAshitaCore* core, ILogManager* logger, const uint32_
     memset(m_SearchBuffer, 0, sizeof(m_SearchBuffer));
     m_ShowItemPreview = false;
     
+    // Initialize window tracking
+    m_WindowOpenedManually = false;
+    m_EnableAutoClose = true; // Default value, will be overridden by settings
+    memset(m_PreviousPoolItems, 0, sizeof(m_PreviousPoolItems));
+    
     InitializeCommands();
     InitializeState();
     LoadDefaultSettings(true);
     LoadDefaultProfile(true);
     LoadProfileList();
+    
+    // Apply settings after loading
+    m_EnableAutoClose = mSettings.EnableAutoClose;
+    
+    // Initialize pool tracking to current state
+    UpdatePoolItemTracking();
 
     return true;
 }
@@ -183,11 +194,6 @@ void Lootwhore::InitializeCommands()
     build.help.command     = "/lw help [Optional: command]";
     build.help.description = "Print information on a command.  If no command is specified, a list of commands will be printed.";
     mCommandMap.insert(std::make_pair("help", build));
-
-    build.handler          = &Lootwhore::HandleCommandUI;
-    build.help.command     = "/lw ui";
-    build.help.description = "Toggle the ImGui user interface.";
-    mCommandMap.insert(std::make_pair("ui", build));
 }
 
 void Lootwhore::InitializeState()

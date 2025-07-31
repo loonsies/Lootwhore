@@ -13,6 +13,12 @@ bool Lootwhore::HandleCommand(int32_t mode, const char* command, bool injected)
         if (argcount == 1)
         {
             m_ShowUI = !m_ShowUI;
+    
+            // Track that the window was opened manually
+            if (m_ShowUI)
+            {
+                m_WindowOpenedManually = true;
+            }
             return true;
         }
         
@@ -518,13 +524,4 @@ void Lootwhore::PrintHelpText(CommandHelp help, bool description)
     pOutput->message_f("$H%s", help.command.c_str());
     if (description)
         pOutput->message(help.description);
-}
-
-void Lootwhore::HandleCommandUI(std::vector<string> args, int argcount, CommandHelp help)
-{
-    UNREFERENCED_PARAMETER(args);
-    UNREFERENCED_PARAMETER(argcount);
-    UNREFERENCED_PARAMETER(help);
-    
-    m_ShowUI = !m_ShowUI;
 }

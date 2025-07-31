@@ -1,5 +1,6 @@
 #include "Lootwhore.h"
 #include "common\thirdparty\rapidxml.hpp"
+#include <cmath>
 using namespace rapidxml;
 
 void Lootwhore::LoadDefaultSettings(bool forceReload)
@@ -128,6 +129,34 @@ void Lootwhore::LoadSettings(const char* Name)
                     if (_stricmp(SubNode->value(), "enabled") == 0)
                         mSettings.SilentStack = true;
                 }
+                else if (_stricmp(SubNode->name(), "enableautoclose") == 0)
+                {
+                    if (_stricmp(SubNode->value(), "enabled") == 0)
+                        mSettings.EnableAutoClose = true;
+                    else if (_stricmp(SubNode->value(), "disabled") == 0)
+                        mSettings.EnableAutoClose = false;
+                }
+                else if (_stricmp(SubNode->name(), "enableautoopen") == 0)
+                {
+                    if (_stricmp(SubNode->value(), "enabled") == 0)
+                        mSettings.EnableAutoOpen = true;
+                    else if (_stricmp(SubNode->value(), "disabled") == 0)
+                        mSettings.EnableAutoOpen = false;
+                }
+                else if (_stricmp(SubNode->name(), "autoclosewhenhandled") == 0)
+                {
+                    if (_stricmp(SubNode->value(), "enabled") == 0)
+                        mSettings.AutoCloseWhenHandled = true;
+                    else if (_stricmp(SubNode->value(), "disabled") == 0)
+                        mSettings.AutoCloseWhenHandled = false;
+                }
+                else if (_stricmp(SubNode->name(), "uiscale") == 0)
+                {
+                    float scale = (float)atof(SubNode->value());
+                    // Round to nearest 0.05 step and clamp to valid range
+                    scale = roundf(scale * 20.0f) / 20.0f;
+                    mSettings.UIScale = max(0.5f, min(2.0f, scale));
+                }
             }        
         }
         else if (_stricmp(Node->name(), "whitelist") == 0)
@@ -172,6 +201,10 @@ void Lootwhore::SaveSettings(const char* Name)
     outstream << "\t\t<delaymin>" << mSettings.RandomDelayMin << "</delaymin> <!--Minimum time, in milliseconds, to wait before lotting a freshly dropped item. -->\n";
     outstream << "\t\t<delaymax>" << mSettings.RandomDelayMax << "</delaymax> <!--Maximum time, in milliseconds, to wait before lotting a freshly dropped item.  Set to 0 for instant lots. -->\n";
     outstream << "\t\t<silentstack>" << (mSettings.SilentStack ? "enabled" : "disabled") << "</silentstack>\n";
+    outstream << "\t\t<enableautoclose>" << (mSettings.EnableAutoClose ? "enabled" : "disabled") << "</enableautoclose> <!--Auto-close UI when treasure pool becomes empty (if it was opened automatically) -->\n";
+    outstream << "\t\t<enableautoopen>" << (mSettings.EnableAutoOpen ? "enabled" : "disabled") << "</enableautoopen> <!--Auto-open UI when new items are added to treasure pool -->\n";
+    outstream << "\t\t<autoclosewhenhandled>" << (mSettings.AutoCloseWhenHandled ? "enabled" : "disabled") << "</autoclosewhenhandled> <!--Auto-close UI when all items have been lotted/passed or are in auto-lists -->\n";
+    outstream << "\t\t<uiscale>" << mSettings.UIScale << "</uiscale> <!--UI scale multiplier, 1.0 is normal size -->\n";
     outstream << "\t</settings>\n\n";
     outstream << "\t<whitelist> <!--Anyone listed here will trigger smartpass when in 'listonly' mode. -->\n";
     for (std::list<string>::iterator iter = mSettings.WhiteList.begin(); iter != mSettings.WhiteList.end(); iter++)

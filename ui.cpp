@@ -1,5 +1,8 @@
 #include "Lootwhore.h"
 #include <filesystem>
+#include <algorithm>
+#include <string>
+#include <cmath>
 
 auto Lootwhore::Direct3DInitialize(IDirect3DDevice8* device) -> bool
 {
@@ -87,12 +90,70 @@ auto Lootwhore::Direct3DDrawIndexedPrimitiveUP(D3DPRIMITIVETYPE PrimitiveType, U
 void Lootwhore::RenderUI()
 {
     auto imgui = m_AshitaCore->GetGuiManager();
-    if (!imgui)
-        return;
+    if (!imgui) return;
 
-    imgui->SetNextWindowSize(ImVec2(800, 600), ImGuiCond_FirstUseEver);
-    if (imgui->Begin("Lootwhore", &m_ShowUI, ImGuiWindowFlags_None))
+    // Check if there are any active items in treasure pool
+    bool hasActiveItems = false;
+    for (int i = 0; i < 10; i++)
     {
+        Ashita::FFXI::treasureitem_t* pTreasureItem = m_AshitaCore->GetMemoryManager()->GetInventory()->GetTreasurePoolItem(i);
+        if (pTreasureItem && pTreasureItem->ItemId > 0)
+        {
+            hasActiveItems = true;
+            break;
+        }
+    }
+    
+    // Auto-open UI when new items are detected
+    if (mSettings.EnableAutoOpen && HasNewItemsInPool() && !m_ShowUI)
+    {
+        m_ShowUI = true;
+        m_WindowOpenedManually = false; // Mark as automatically opened
+    }
+    
+    // Auto-close logic: close if enabled, was opened automatically, and conditions are met
+    if (m_EnableAutoClose && !m_WindowOpenedManually && m_ShowUI)
+    {
+        bool shouldClose = false;
+        
+        // Original auto-close: when no active items
+        if (!hasActiveItems)
+        {
+            shouldClose = true;
+        }
+        
+        // New auto-close: when all items are handled or automatic
+        if (mSettings.AutoCloseWhenHandled && hasActiveItems && AllItemsHandledOrAutomatic())
+        {
+            shouldClose = true;
+        }
+        
+        if (shouldClose)
+        {
+            m_ShowUI = false;
+            UpdatePoolItemTracking(); // Update tracking when closing
+            return;
+        }
+    }
+    
+    // Update pool tracking for next frame
+    UpdatePoolItemTracking();
+
+    if (!m_ShowUI) return;
+
+    // Create window title with unhandled item count
+    int unhandledCount = GetUnhandledItemCount();
+    std::string windowTitle = "Lootwhore";
+    if (unhandledCount > 0)
+    {
+        windowTitle += " (" + std::to_string(unhandledCount) + ")";
+    }
+
+    imgui->SetNextWindowSize(ImVec2(800 * mSettings.UIScale, 600 * mSettings.UIScale), ImGuiCond_FirstUseEver);
+    if (imgui->Begin(windowTitle.c_str(), &m_ShowUI, ImGuiWindowFlags_NoSavedSettings))
+    {
+        // Apply UI scaling to this window only
+        imgui->SetWindowFontScale(mSettings.UIScale);
         RenderProfileControls();
         
         imgui->Separator();
@@ -130,10 +191,22 @@ void Lootwhore::RenderUI()
                 imgui->EndTabItem();
             }
             
+            if (imgui->BeginTabItem("Settings"))
+            {
+                RenderSettingsTab();
+                imgui->EndTabItem();
+            }
+            
             imgui->EndTabBar();
         }
     }
     imgui->End();
+    
+    // If the window was just closed by the user (X button), reset the manual flag
+    if (!m_ShowUI)
+    {
+        m_WindowOpenedManually = false;
+    }
     
     // Render modals
     RenderCreateProfileModal();
@@ -307,6 +380,9 @@ void Lootwhore::RenderCreateProfileModal()
     
     if (imgui->BeginPopupModal("Create New Profile", nullptr, ImGuiWindowFlags_NoResize))
     {
+        // Apply UI scaling to this modal window only
+        imgui->SetWindowFontScale(mSettings.UIScale);
+        
         imgui->Text("Enter a name for creating a new profile");
         imgui->Separator();
         
@@ -398,7 +474,7 @@ void Lootwhore::RenderLootPoolTab()
                 IItem* pItem = m_AshitaCore->GetResourceManager()->GetItemById(pTreasureItem->ItemId);
                 if (pItem)
                 {
-                    if (imgui->Selectable(pItem->Name[0], m_SelectedItemId == pTreasureItem->ItemId, ImGuiSelectableFlags_None, ImVec2(0, 23)))
+                    if (imgui->Selectable(pItem->Name[0], m_SelectedItemId == pTreasureItem->ItemId, ImGuiSelectableFlags_SpanAllColumns))
                     {
                         m_SelectedItemId = pTreasureItem->ItemId;
                         m_ShowItemPreview = true;
@@ -406,7 +482,7 @@ void Lootwhore::RenderLootPoolTab()
                 }
                 else
                 {
-                    if (imgui->Selectable(("Item ID: " + std::to_string(pTreasureItem->ItemId)).c_str(), m_SelectedItemId == pTreasureItem->ItemId, ImGuiSelectableFlags_None, ImVec2(0, 23)))
+                    if (imgui->Selectable(("Item ID: " + std::to_string(pTreasureItem->ItemId)).c_str(), m_SelectedItemId == pTreasureItem->ItemId, ImGuiSelectableFlags_SpanAllColumns))
                     {
                         m_SelectedItemId = pTreasureItem->ItemId;
                         m_ShowItemPreview = true;
@@ -415,7 +491,7 @@ void Lootwhore::RenderLootPoolTab()
             }
             else
             {
-                imgui->Selectable("Empty", false, ImGuiSelectableFlags_Disabled, ImVec2(0, 23));
+                imgui->Selectable("Empty", false, ImGuiSelectableFlags_Disabled | ImGuiSelectableFlags_SpanAllColumns);
             }
             
             // Winner name and lot number combined
@@ -622,12 +698,12 @@ void Lootwhore::RenderLootPoolTab()
             }
             else
             {
-                // Empty invisible buttons to maintain consistent row height - same as the actual buttons
-                imgui->InvisibleButton(("emptyLot##" + std::to_string(i)).c_str(), ImVec2(35, 23));
+                // Empty invisible buttons to maintain consistent row height - scaled with UI
+                imgui->InvisibleButton(("emptyLot##" + std::to_string(i)).c_str(), ImVec2(35 * mSettings.UIScale, 0));
                 imgui->SameLine();
-                imgui->InvisibleButton(("emptyPass##" + std::to_string(i)).c_str(), ImVec2(45, 23));
+                imgui->InvisibleButton(("emptyPass##" + std::to_string(i)).c_str(), ImVec2(45 * mSettings.UIScale, 0));
                 imgui->SameLine();
-                imgui->InvisibleButton(("emptyAddTo##" + std::to_string(i)).c_str(), ImVec2(60, 23));
+                imgui->InvisibleButton(("emptyAddTo##" + std::to_string(i)).c_str(), ImVec2(60 * mSettings.UIScale, 0));
             }
         }
         
@@ -1104,5 +1180,210 @@ void Lootwhore::RenderSearchBar(const char* hint, std::function<void(const char*
                 pOutput->error_f("Item not found: %s", m_SearchBuffer);
             }
         }
+    }
+}
+
+void Lootwhore::RenderSettingsTab()
+{
+    auto imgui = m_AshitaCore->GetGuiManager();
+    if (!imgui) return;
+    
+    imgui->Text("UI Behavior Settings");
+    imgui->Separator();
+    
+    // UI Scale input with 0.05 increments (50 to 200, representing 0.50 to 2.00)
+    int scaleInt = (int)roundf(mSettings.UIScale * 100.0f);
+    if (imgui->InputInt("UI Scale", &scaleInt, 5, 10))
+    {
+        // Clamp to valid range (50 to 200, representing 0.50 to 2.00)
+        scaleInt = max(50, min(200, scaleInt));
+        // Ensure it's a multiple of 5 (0.05 increments)
+        scaleInt = (scaleInt / 5) * 5;
+        
+        mSettings.UIScale = scaleInt / 100.0f;
+        
+        std::string settingsFile = mState.MyName + ".xml";
+        SaveSettings(settingsFile.c_str());
+    }
+    imgui->SameLine();
+    imgui->Text("(%.2f)", mSettings.UIScale);
+    imgui->SameLine();
+    HelpMarker("Adjusts the scale of all UI elements in 0.05 increments. Values: 50-200 (0.50-2.00). 100 = normal size.");
+    
+    imgui->Spacing();
+    
+    // Auto-open window setting
+    if (imgui->Checkbox("Auto-open window when new items are added to treasure pool", &mSettings.EnableAutoOpen))
+    {
+        std::string settingsFile = mState.MyName + ".xml";
+        SaveSettings(settingsFile.c_str());
+    }
+    imgui->SameLine();
+    HelpMarker("When enabled, the window will automatically open when new items are detected in the treasure pool.");
+    
+    imgui->Spacing();
+    
+    // Auto-close window setting
+    if (imgui->Checkbox("Auto-close window when treasure pool is empty", &mSettings.EnableAutoClose))
+    {
+        // Update the runtime setting and save changes
+        m_EnableAutoClose = mSettings.EnableAutoClose;
+        std::string settingsFile = mState.MyName + ".xml";
+        SaveSettings(settingsFile.c_str());
+    }
+    imgui->SameLine();
+    HelpMarker("When enabled, the window will automatically close if it was opened automatically due to new treasure pool items and all items have been cleared from the pool.");
+    
+    imgui->Spacing();
+    
+    // Auto-close when handled setting
+    if (imgui->Checkbox("Auto-close window when all items are handled or automatic", &mSettings.AutoCloseWhenHandled))
+    {
+        std::string settingsFile = mState.MyName + ".xml";
+        SaveSettings(settingsFile.c_str());
+    }
+    imgui->SameLine();
+    HelpMarker("When enabled, the window will automatically close when all items have been lotted/passed by the player or are in auto-lot/pass/ignore/drop lists.");
+}
+
+bool Lootwhore::HasNewItemsInPool()
+{
+    bool hasNewItems = false;
+    for (int i = 0; i < 10; i++)
+    {
+        Ashita::FFXI::treasureitem_t* pTreasureItem = m_AshitaCore->GetMemoryManager()->GetInventory()->GetTreasurePoolItem(i);
+        uint16_t currentItemId = (pTreasureItem && pTreasureItem->ItemId > 0) ? pTreasureItem->ItemId : 0;
+        
+        // Check if this is a new item (wasn't in the previous state)
+        if (currentItemId > 0 && m_PreviousPoolItems[i] != currentItemId)
+        {
+            hasNewItems = true;
+            break;
+        }
+    }
+    return hasNewItems;
+}
+
+bool Lootwhore::AllItemsHandledOrAutomatic()
+{
+    for (int i = 0; i < 10; i++)
+    {
+        Ashita::FFXI::treasureitem_t* pTreasureItem = m_AshitaCore->GetMemoryManager()->GetInventory()->GetTreasurePoolItem(i);
+        if (!pTreasureItem || pTreasureItem->ItemId == 0)
+            continue; // Empty slot, skip
+            
+        // Check if player has already lotted or passed
+        if (pTreasureItem->Lot == 0) // Not yet handled by player
+        {
+            // Check if item is in one of the auto-lists
+            bool isAutomatic = false;
+            
+            // Check if in auto-lot list
+            auto lotItem = mProfile.ItemMap.find(pTreasureItem->ItemId);
+            if (lotItem != mProfile.ItemMap.end() && lotItem->second == LotReaction::Lot)
+            {
+                isAutomatic = true;
+            }
+            
+            // Check if in auto-pass list
+            if (lotItem != mProfile.ItemMap.end() && lotItem->second == LotReaction::Pass)
+            {
+                isAutomatic = true;
+            }
+            
+            // Check if in ignore list
+            if (lotItem != mProfile.ItemMap.end() && lotItem->second == LotReaction::Ignore)
+            {
+                isAutomatic = true;
+            }
+            
+            // Check if in auto-drop list
+            auto dropItem = std::find(mProfile.AutoDrop.begin(), mProfile.AutoDrop.end(), pTreasureItem->ItemId);
+            if (dropItem != mProfile.AutoDrop.end())
+            {
+                isAutomatic = true;
+            }
+            
+            // If this item requires manual action and hasn't been handled, return false
+            if (!isAutomatic)
+            {
+                return false;
+            }
+        }
+    }
+    return true; // All items are either handled or automatic
+}
+
+void Lootwhore::UpdatePoolItemTracking()
+{
+    for (int i = 0; i < 10; i++)
+    {
+        Ashita::FFXI::treasureitem_t* pTreasureItem = m_AshitaCore->GetMemoryManager()->GetInventory()->GetTreasurePoolItem(i);
+        m_PreviousPoolItems[i] = (pTreasureItem && pTreasureItem->ItemId > 0) ? pTreasureItem->ItemId : 0;
+    }
+}
+
+int Lootwhore::GetUnhandledItemCount()
+{
+    int unhandledCount = 0;
+    
+    for (int i = 0; i < 10; i++)
+    {
+        Ashita::FFXI::treasureitem_t* pTreasureItem = m_AshitaCore->GetMemoryManager()->GetInventory()->GetTreasurePoolItem(i);
+        if (!pTreasureItem || pTreasureItem->ItemId == 0)
+            continue; // Empty slot, skip
+            
+        // Check if player has already lotted or passed
+        if (pTreasureItem->Lot == 0) // Not yet handled by player
+        {
+            // Check if item is in one of the auto-lists
+            bool isAutomatic = false;
+            
+            // Check if in auto-lot list
+            auto lotItem = mProfile.ItemMap.find(pTreasureItem->ItemId);
+            if (lotItem != mProfile.ItemMap.end() && lotItem->second == LotReaction::Lot)
+            {
+                isAutomatic = true;
+            }
+            
+            // Check if in auto-pass list
+            if (lotItem != mProfile.ItemMap.end() && lotItem->second == LotReaction::Pass)
+            {
+                isAutomatic = true;
+            }
+            
+            // Check if in ignore list
+            if (lotItem != mProfile.ItemMap.end() && lotItem->second == LotReaction::Ignore)
+            {
+                isAutomatic = true;
+            }
+            
+            // Check if in auto-drop list
+            auto dropItem = std::find(mProfile.AutoDrop.begin(), mProfile.AutoDrop.end(), pTreasureItem->ItemId);
+            if (dropItem != mProfile.AutoDrop.end())
+            {
+                isAutomatic = true;
+            }
+            
+            // If this item requires manual action and hasn't been handled, count it
+            if (!isAutomatic)
+            {
+                unhandledCount++;
+            }
+        }
+    }
+    
+    return unhandledCount;
+}
+
+void Lootwhore::HelpMarker(const char* desc)
+{
+    auto imgui = m_AshitaCore->GetGuiManager();
+    if (!imgui) return;
+    
+    imgui->TextDisabled("(?)");
+    if (imgui->IsItemHovered())
+    {
+        imgui->SetTooltip("%s", desc);
     }
 }

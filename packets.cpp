@@ -101,11 +101,6 @@ void Lootwhore::HandleIncomingPacket0xD2(uint8_t* modified)
     }
 
     mState.PoolSlots[poolIndex] = TreasurePoolSlot_t(itemId, delay);
-    if (itemId > 0)
-    {
-        m_ShowUI = true; // Display UI when a new item is added to the treasure pool.
-        pOutput->message("Displaying UI");
-    }
 }
 
 void Lootwhore::HandleIncomingPacket0xD3(uint8_t* modified)
