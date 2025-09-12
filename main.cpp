@@ -18,7 +18,7 @@ bool Lootwhore::Initialize(IAshitaCore* core, ILogManager* logger, const uint32_
 {
     m_AshitaCore = core;
     m_LogManager = logger;
-    m_PluginId = id;
+    m_PluginId   = id;
 
     MODULEINFO mod = {0};
     ::GetModuleInformation(::GetCurrentProcess(), ::GetModuleHandle("FFXiMain.dll"), &mod, sizeof(MODULEINFO));
@@ -51,42 +51,39 @@ bool Lootwhore::Initialize(IAshitaCore* core, ILogManager* logger, const uint32_
         return false;
     }
 
-    pOutput      = new OutputHelpers(core, logger, this->GetName());
-    pSettings    = new SettingsHelper(core, pOutput, this->GetName());
-    pPacket      = new safePacketInjector(core->GetPacketManager());
+    pOutput   = new OutputHelpers(core, logger, this->GetName());
+    pSettings = new SettingsHelper(core, pOutput, this->GetName());
+    pPacket   = new safePacketInjector(core->GetPacketManager());
 
-    mSettings    = Settings_t();
-    
+    mSettings = Settings_t();
+
     // Initialize UI variables
-    m_ShowUI = false;
+    m_ShowUI               = false;
     m_SelectedProfileIndex = 0;
     memset(m_NewProfileName, 0, sizeof(m_NewProfileName));
-    m_CurrentTab = 0;
-    m_ShowCreateProfileModal = false;
+    m_CurrentTab               = 0;
+    m_ShowCreateProfileModal   = false;
     m_ProfileNameAlreadyExists = false;
-    
+
     // Initialize item preview and search
     m_SelectedItemId = 0;
+    m_SelectedItemSlot = -1;
     memset(m_SearchBuffer, 0, sizeof(m_SearchBuffer));
     m_ShowItemPreview = false;
-    
+
     // Initialize window tracking
     m_WindowOpenedManually = false;
-    m_EnableAutoClose = true; // Default value, will be overridden by settings
+    m_EnableAutoClose      = true; // Default value, will be overridden by settings
     memset(m_PreviousPoolItems, 0, sizeof(m_PreviousPoolItems));
-    
+
     InitializeCommands();
     InitializeState();
     LoadDefaultSettings(true);
-    LoadDefaultProfile(true);
     LoadProfileList();
-    
     // Apply settings after loading
     m_EnableAutoClose = mSettings.EnableAutoClose;
-    
     // Initialize pool tracking to current state
     UpdatePoolItemTracking();
-
     return true;
 }
 
@@ -106,7 +103,7 @@ void Lootwhore::InitializeCommands()
     mCommandMap.insert(std::make_pair("import", build));
 
     build.handler          = &Lootwhore::HandleCommandProfile;
-    build.help.command = "/lw profile [Required: Profile Name]";
+    build.help.command     = "/lw profile [Required: Profile Name]";
     build.help.description = "Load a profile, containing settings to determine how items should be treated.";
     mCommandMap.insert(std::make_pair("profile", build));
 
@@ -200,8 +197,8 @@ void Lootwhore::InitializeState()
 {
     //Initialize to default values.
     mState.InventoryLoading = true;
-    mState.MyId = 0;
-    mState.MyName = "NO_NAME";
+    mState.MyId             = 0;
+    mState.MyName           = "NO_NAME";
     for (int x = 0; x < 10; x++)
     {
         mState.PoolSlots[x] = TreasurePoolSlot_t();
@@ -210,7 +207,7 @@ void Lootwhore::InitializeState()
     {
         mState.InventoryLocks[x] = std::chrono::steady_clock::now() - std::chrono::seconds(10);
     }
-    
+
     //Check if we're already ingame
     uint16_t myIndex = m_AshitaCore->GetMemoryManager()->GetParty()->GetMemberTargetIndex(0);
     if (myIndex < 1)
@@ -223,8 +220,8 @@ void Lootwhore::InitializeState()
         return;
 
     //We're ingame, so fill in ID/Name.
-    mState.MyId = m_AshitaCore->GetMemoryManager()->GetEntity()->GetServerId(myIndex);
-    mState.MyName = m_AshitaCore->GetMemoryManager()->GetEntity()->GetName(myIndex);
+    mState.MyId             = m_AshitaCore->GetMemoryManager()->GetEntity()->GetServerId(myIndex);
+    mState.MyName           = m_AshitaCore->GetMemoryManager()->GetEntity()->GetName(myIndex);
     mState.InventoryLoading = false;
 
     IParty* pParty = m_AshitaCore->GetMemoryManager()->GetParty();

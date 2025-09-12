@@ -1,0 +1,381 @@
+﻿  commands.cpp
+C:\Ashita\plugins\sdk\Commands.h(152,26): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+  (compiling source file 'commands.cpp')
+  
+C:\Ashita\plugins\sdk\ErrorHandling.h(153,34): warning C4535: calling _set_se_translator() requires /EHa
+  (compiling source file 'commands.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(33,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'commands.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(37,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'commands.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(40,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'commands.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(44,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'commands.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(76,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'commands.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(80,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'commands.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(83,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'commands.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(87,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'commands.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(110,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'commands.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(114,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'commands.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(117,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'commands.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(121,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'commands.cpp')
+  
+C:\Users\looney\Lootwhore\common\Settings.h(234,25): warning C4244: 'initializing': conversion from 'std::streamoff' to 'long', possible loss of data
+  (compiling source file 'commands.cpp')
+  
+C:\Users\looney\Lootwhore\common\Settings.h(257,20): warning C4244: 'initializing': conversion from 'std::streamoff' to 'long', possible loss of data
+  (compiling source file 'commands.cpp')
+  
+C:\Users\looney\Lootwhore\common\Settings.h(308,19): warning C4244: 'initializing': conversion from 'std::streamoff' to 'long', possible loss of data
+  (compiling source file 'commands.cpp')
+  
+  fileio.cpp
+C:\Ashita\plugins\sdk\Commands.h(152,26): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+  (compiling source file 'fileio.cpp')
+  
+C:\Ashita\plugins\sdk\ErrorHandling.h(153,34): warning C4535: calling _set_se_translator() requires /EHa
+  (compiling source file 'fileio.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(33,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'fileio.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(37,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'fileio.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(40,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'fileio.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(44,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'fileio.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(76,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'fileio.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(80,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'fileio.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(83,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'fileio.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(87,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'fileio.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(110,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'fileio.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(114,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'fileio.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(117,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'fileio.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(121,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'fileio.cpp')
+  
+C:\Users\looney\Lootwhore\common\Settings.h(234,25): warning C4244: 'initializing': conversion from 'std::streamoff' to 'long', possible loss of data
+  (compiling source file 'fileio.cpp')
+  
+C:\Users\looney\Lootwhore\common\Settings.h(257,20): warning C4244: 'initializing': conversion from 'std::streamoff' to 'long', possible loss of data
+  (compiling source file 'fileio.cpp')
+  
+C:\Users\looney\Lootwhore\common\Settings.h(308,19): warning C4244: 'initializing': conversion from 'std::streamoff' to 'long', possible loss of data
+  (compiling source file 'fileio.cpp')
+  
+  helpers.cpp
+C:\Ashita\plugins\sdk\Commands.h(152,26): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+  (compiling source file 'helpers.cpp')
+  
+C:\Ashita\plugins\sdk\ErrorHandling.h(153,34): warning C4535: calling _set_se_translator() requires /EHa
+  (compiling source file 'helpers.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(33,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'helpers.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(37,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'helpers.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(40,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'helpers.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(44,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'helpers.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(76,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'helpers.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(80,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'helpers.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(83,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'helpers.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(87,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'helpers.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(110,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'helpers.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(114,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'helpers.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(117,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'helpers.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(121,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'helpers.cpp')
+  
+C:\Users\looney\Lootwhore\common\Settings.h(234,25): warning C4244: 'initializing': conversion from 'std::streamoff' to 'long', possible loss of data
+  (compiling source file 'helpers.cpp')
+  
+C:\Users\looney\Lootwhore\common\Settings.h(257,20): warning C4244: 'initializing': conversion from 'std::streamoff' to 'long', possible loss of data
+  (compiling source file 'helpers.cpp')
+  
+C:\Users\looney\Lootwhore\common\Settings.h(308,19): warning C4244: 'initializing': conversion from 'std::streamoff' to 'long', possible loss of data
+  (compiling source file 'helpers.cpp')
+  
+C:\Users\looney\Lootwhore\helpers.cpp(84,27): warning C4244: '=': conversion from 'uint16_t' to 'uint8_t', possible loss of data
+C:\Users\looney\Lootwhore\helpers.cpp(107,36): warning C4244: '=': conversion from 'uint16_t' to 'uint8_t', possible loss of data
+C:\Users\looney\Lootwhore\helpers.cpp(125,30): warning C4244: '=': conversion from 'uint16_t' to 'uint8_t', possible loss of data
+C:\Users\looney\Lootwhore\helpers.cpp(126,35): warning C4244: '=': conversion from 'uint16_t' to 'uint8_t', possible loss of data
+C:\Users\looney\Lootwhore\helpers.cpp(145,25): warning C4312: 'type cast': conversion from 'DWORD' to 'uint8_t *' of greater size
+C:\Users\looney\Lootwhore\helpers.cpp(148,13): warning C4312: 'type cast': conversion from 'DWORD' to 'uint8_t *' of greater size
+C:\Users\looney\Lootwhore\helpers.cpp(165,21): warning C4312: 'type cast': conversion from 'DWORD' to 'uint8_t *' of greater size
+C:\Users\looney\Lootwhore\helpers.cpp(166,21): warning C4312: 'type cast': conversion from 'DWORD' to 'uint8_t *' of greater size
+C:\Users\looney\Lootwhore\helpers.cpp(167,21): warning C4312: 'type cast': conversion from 'DWORD' to 'uint8_t *' of greater size
+C:\Users\looney\Lootwhore\helpers.cpp(174,33): warning C4312: 'type cast': conversion from 'DWORD' to 'uint8_t *' of greater size
+  logic.cpp
+C:\Ashita\plugins\sdk\Commands.h(152,26): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+  (compiling source file 'logic.cpp')
+  
+C:\Ashita\plugins\sdk\ErrorHandling.h(153,34): warning C4535: calling _set_se_translator() requires /EHa
+  (compiling source file 'logic.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(33,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'logic.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(37,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'logic.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(40,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'logic.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(44,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'logic.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(76,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'logic.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(80,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'logic.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(83,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'logic.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(87,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'logic.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(110,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'logic.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(114,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'logic.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(117,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'logic.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(121,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'logic.cpp')
+  
+C:\Users\looney\Lootwhore\common\Settings.h(234,25): warning C4244: 'initializing': conversion from 'std::streamoff' to 'long', possible loss of data
+  (compiling source file 'logic.cpp')
+  
+C:\Users\looney\Lootwhore\common\Settings.h(257,20): warning C4244: 'initializing': conversion from 'std::streamoff' to 'long', possible loss of data
+  (compiling source file 'logic.cpp')
+  
+C:\Users\looney\Lootwhore\common\Settings.h(308,19): warning C4244: 'initializing': conversion from 'std::streamoff' to 'long', possible loss of data
+  (compiling source file 'logic.cpp')
+  
+  main.cpp
+C:\Ashita\plugins\sdk\Commands.h(152,26): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Ashita\plugins\sdk\ErrorHandling.h(153,34): warning C4535: calling _set_se_translator() requires /EHa
+  (compiling source file 'main.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(33,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(37,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(40,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(44,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(76,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(80,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(83,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(87,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(110,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(114,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(117,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(121,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\looney\Lootwhore\common\Settings.h(234,25): warning C4244: 'initializing': conversion from 'std::streamoff' to 'long', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\looney\Lootwhore\common\Settings.h(257,20): warning C4244: 'initializing': conversion from 'std::streamoff' to 'long', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\looney\Lootwhore\common\Settings.h(308,19): warning C4244: 'initializing': conversion from 'std::streamoff' to 'long', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\looney\Lootwhore\main.cpp(25,45): warning C4244: '=': conversion from 'uintptr_t' to 'DWORD', possible loss of data
+C:\Users\looney\Lootwhore\main.cpp(26,45): warning C4244: '=': conversion from 'uintptr_t' to 'DWORD', possible loss of data
+C:\Users\looney\Lootwhore\main.cpp(40,19): warning C4312: 'type cast': conversion from 'DWORD' to 'uint8_t *' of greater size
+C:\Users\looney\Lootwhore\main.cpp(47,18): warning C4312: 'type cast': conversion from 'DWORD' to 'uint8_t *' of greater size
+  packets.cpp
+C:\Ashita\plugins\sdk\Commands.h(152,26): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+  (compiling source file 'packets.cpp')
+  
+C:\Ashita\plugins\sdk\ErrorHandling.h(153,34): warning C4535: calling _set_se_translator() requires /EHa
+  (compiling source file 'packets.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(33,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'packets.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(37,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'packets.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(40,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'packets.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(44,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'packets.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(76,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'packets.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(80,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'packets.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(83,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'packets.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(87,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'packets.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(110,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'packets.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(114,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'packets.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(117,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'packets.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(121,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'packets.cpp')
+  
+C:\Users\looney\Lootwhore\common\Settings.h(234,25): warning C4244: 'initializing': conversion from 'std::streamoff' to 'long', possible loss of data
+  (compiling source file 'packets.cpp')
+  
+C:\Users\looney\Lootwhore\common\Settings.h(257,20): warning C4244: 'initializing': conversion from 'std::streamoff' to 'long', possible loss of data
+  (compiling source file 'packets.cpp')
+  
+C:\Users\looney\Lootwhore\common\Settings.h(308,19): warning C4244: 'initializing': conversion from 'std::streamoff' to 'long', possible loss of data
+  (compiling source file 'packets.cpp')
+  
+  ui.cpp
+C:\Ashita\plugins\sdk\Commands.h(152,26): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+  (compiling source file 'ui.cpp')
+  
+C:\Ashita\plugins\sdk\ErrorHandling.h(153,34): warning C4535: calling _set_se_translator() requires /EHa
+  (compiling source file 'ui.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(33,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'ui.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(37,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'ui.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(40,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'ui.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(44,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'ui.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(76,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'ui.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(80,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'ui.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(83,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'ui.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(87,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'ui.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(110,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'ui.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(114,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'ui.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(117,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'ui.cpp')
+  
+C:\Users\looney\Lootwhore\common\Output.h(121,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'ui.cpp')
+  
+C:\Users\looney\Lootwhore\common\Settings.h(234,25): warning C4244: 'initializing': conversion from 'std::streamoff' to 'long', possible loss of data
+  (compiling source file 'ui.cpp')
+  
+C:\Users\looney\Lootwhore\common\Settings.h(257,20): warning C4244: 'initializing': conversion from 'std::streamoff' to 'long', possible loss of data
+  (compiling source file 'ui.cpp')
+  
+C:\Users\looney\Lootwhore\common\Settings.h(308,19): warning C4244: 'initializing': conversion from 'std::streamoff' to 'long', possible loss of data
+  (compiling source file 'ui.cpp')
+  
+  Generating Code...
+     Creating library C:\Users\looney\Lootwhore\x64\Debug\Lootwhore.lib and object C:\Users\looney\Lootwhore\x64\Debug\Lootwhore.exp
+  Lootwhore.vcxproj -> C:\Users\looney\Lootwhore\x64\Debug\Lootwhore.dll

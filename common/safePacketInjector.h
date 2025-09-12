@@ -5,7 +5,7 @@
 #pragma once
 #endif
 
-#include "G:\Ashita\plugins\sdk\ashita.h"
+#include "C:\Ashita\plugins\sdk\ashita.h"
 #define MAX_PACKET_SIZE 508
 
 class safePacketInjector
@@ -24,13 +24,13 @@ public:
     {
         mPacketHandler = packetManager;
     }
-    ~safePacketInjector(){};
+    ~safePacketInjector() {};
 
     void addIncomingPacket_s(uint16_t id, uint32_t size, void* data)
     {
         if (size > MAX_PACKET_SIZE)
             return;
-      
+
         memcpy(mIncomingPacketBuffer, data, size);
         mIncomingPacketId   = id;
         mIncomingPacketSize = size;

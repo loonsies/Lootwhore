@@ -25,8 +25,8 @@ void Lootwhore::LoadDefaultSettings(bool forceReload)
     uint32_t seed = static_cast<uint32_t>(std::chrono::system_clock::now().time_since_epoch().count() + GetCurrentProcessId());
     if (mSettings.RandomDelayMax != 0)
     {
-        int minDelay = max(0, mSettings.RandomDelayMin);
-        int maxDelay = max(minDelay + 1, mSettings.RandomDelayMax);
+        int minDelay        = max(0, mSettings.RandomDelayMin);
+        int maxDelay        = max(minDelay + 1, mSettings.RandomDelayMax);
         mRandomEngine       = std::default_random_engine(seed);
         mRandomDistribution = std::uniform_int_distribution<int32_t>(minDelay, maxDelay);
     }
@@ -66,7 +66,11 @@ void Lootwhore::LoadSettings(const char* Name)
         {
             for (xml_node<>* SubNode = Node->first_node(); SubNode; SubNode = SubNode->next_sibling())
             {
-                if (_stricmp(SubNode->name(), "maxretry") == 0)
+                if (_stricmp(SubNode->name(), "currentprofile") == 0)
+                {
+                    mState.CurrentProfile = SubNode->value();
+                }
+                else if (_stricmp(SubNode->name(), "maxretry") == 0)
                 {
                     mSettings.MaxRetry = max(1, min(10, atoi(SubNode->value())));
                 }
@@ -84,7 +88,7 @@ void Lootwhore::LoadSettings(const char* Name)
                         if ((bagIndex < 1) || (bagIndex > 12))
                             continue;
                         mSettings.StoreBags.push_back(bagIndex);
-                    }                
+                    }
                 }
                 else if (_stricmp(SubNode->name(), "forceenablebags") == 0)
                 {
@@ -152,12 +156,24 @@ void Lootwhore::LoadSettings(const char* Name)
                 }
                 else if (_stricmp(SubNode->name(), "uiscale") == 0)
                 {
-                    float scale = (float)atof(SubNode->value());
+                    // Use std::stof with classic locale to avoid locale issues (e.g. comma vs dot)
+                    float scale = 1.0f;
+                    try
+                    {
+                        std::istringstream iss(SubNode->value());
+                        iss.imbue(std::locale::classic());
+                        iss >> scale;
+                    }
+                    catch (...)
+                    {
+                        pOutput->error_f("Failed to parse uiscale value: %s", SubNode->value());
+                        scale = 1.0f;
+                    }
                     // Round to nearest 0.05 step and clamp to valid range
-                    scale = roundf(scale * 20.0f) / 20.0f;
+                    scale             = roundf(scale * 20.0f) / 20.0f;
                     mSettings.UIScale = max(0.5f, min(2.0f, scale));
                 }
-            }        
+            }
         }
         else if (_stricmp(Node->name(), "whitelist") == 0)
         {
@@ -185,6 +201,7 @@ void Lootwhore::SaveSettings(const char* Name)
 
     outstream << "<lwconfig>\n";
     outstream << "\n\t<settings>\n";
+    outstream << "\t\t<currentprofile>" << mState.CurrentProfile << "</currentprofile>\n";
     outstream << "\t\t<storebags>";
     for (std::list<int>::iterator iter = mSettings.StoreBags.begin(); iter != mSettings.StoreBags.end(); iter++)
     {
@@ -193,7 +210,7 @@ void Lootwhore::SaveSettings(const char* Name)
         outstream << *iter;
     }
     outstream << "</storebags>\n";
-    outstream << "\t\t<autostack>"  << (mSettings.AutoStack ? "enabled" : "disabled") << "</autostack>\n";
+    outstream << "\t\t<autostack>" << (mSettings.AutoStack ? "enabled" : "disabled") << "</autostack>\n";
     outstream << "\t\t<forceenablebags></forceenablebags>\n";
     outstream << "\t\t<nomadstorage>" << (mSettings.EnableNomadStorage ? "enabled" : "disabled") << "</nomadstorage>\n";
     outstream << "\t\t<maxretry>" << mSettings.MaxRetry << "</maxretry> <!--Maximum amount of times to try lotting or passing an item if server doesn't respond to indicate packet was received. -->\n";
@@ -211,7 +228,7 @@ void Lootwhore::SaveSettings(const char* Name)
     {
         outstream << "\t\t<entry>" << *iter << "</entry>\n";
     }
-    outstream << "\t</whitelist>\n\n";    
+    outstream << "\t</whitelist>\n\n";
     outstream << "</lwconfig>";
     outstream.close();
     pOutput->message_f("Wrote settings XML. [$H%s$R]", Path.c_str());
@@ -241,7 +258,7 @@ void Lootwhore::LoadDefaultProfile(bool forceReload)
     {
         if (playerFile)
         {
-            LoadProfile((mState.MyName + ".xml").c_str());        
+            LoadProfile((mState.MyName + ".xml").c_str());
         }
         else
         {
@@ -351,7 +368,7 @@ void Lootwhore::ImportProfile(const char* Name)
                                 reaction = LotReaction::Pass;
                                 mProfile.AutoDrop.push_back(pResource->Id);
                             }
-                            
+
                             mProfile.ItemMap[pResource->Id] = reaction;
                         }
                     }
@@ -389,7 +406,7 @@ void Lootwhore::LoadProfile(const char* Profile)
     }
 
     //Reset settings.
-    mProfile                  = Profile_t();
+    mProfile = Profile_t();
 
     //Load profile.
     char* bigbuffer           = NULL;
@@ -452,7 +469,8 @@ void Lootwhore::LoadProfile(const char* Profile)
                     if (idAttr == NULL)
                         continue;
                     auto id = atoi(idAttr->value());
-                    if ((id < 0) || (id > 65534)) continue;
+                    if ((id < 0) || (id > 65534))
+                        continue;
 
                     if (_stricmp(SubNode->value(), "lot") == 0)
                         mProfile.ItemMap[(uint16_t)id] = LotReaction::Lot;

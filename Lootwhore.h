@@ -5,7 +5,7 @@
 #pragma once
 #endif
 
-#include "G:\Ashita\plugins\sdk\ashita.h"
+#include "C:\Ashita\plugins\sdk\ashita.h"
 #include "common\Utilities.h"
 #include "common\Output.h"
 #include "common\Settings.h"
@@ -45,16 +45,17 @@ private:
     char m_NewProfileName[256];
     int m_CurrentTab;
     std::vector<std::string> m_ProfileList;
-    
+
     // Modal state for new profile creation
     bool m_ShowCreateProfileModal;
     bool m_ProfileNameAlreadyExists;
-    
+
     // Item preview and search functionality
     uint16_t m_SelectedItemId;
+    int m_SelectedItemSlot;
     char m_SearchBuffer[256];
     bool m_ShowItemPreview;
-    
+
     // Window opening tracking
     bool m_WindowOpenedManually;
     bool m_EnableAutoClose;
@@ -89,7 +90,7 @@ public:
     {
         return (uint32_t)(Ashita::PluginFlags::Legacy | Ashita::PluginFlags::UseDirect3D);
     }
-	
+
     //main.cpp
     bool Initialize(IAshitaCore* core, ILogManager* logger, const uint32_t id) override;
     void Release(void) override;
@@ -127,9 +128,9 @@ public:
     void ImportProfile(const char* Profile);
     void LoadProfile(const char* Profile);
     void SaveProfile(const char* Profile, bool AppendPath);
-	
+
     //packets.cpp
-    bool HandleIncomingPacket(uint16_t id, uint32_t size, const uint8_t* data, uint8_t* modified, uint32_t sizeChunk, const uint8_t* dataChunk, bool injected, bool blocked) override;	
+    bool HandleIncomingPacket(uint16_t id, uint32_t size, const uint8_t* data, uint8_t* modified, uint32_t sizeChunk, const uint8_t* dataChunk, bool injected, bool blocked) override;
     bool HandleOutgoingPacket(uint16_t id, uint32_t size, const uint8_t* data, uint8_t* modified, uint32_t sizeChunk, const uint8_t* dataChunk, bool injected, bool blocked) override;
     void HandleIncomingPacket0x0A(uint8_t* modified);
     void HandleIncomingPacket0xD2(uint8_t* modified);
@@ -166,7 +167,7 @@ public:
     void RenderSettingsTab();
     void RenderItemPreview();
     void RenderSearchBar(const char* hint, std::function<void(const char*)> onItemSelected);
-    
+
     // UI Helpers
     void HelpMarker(const char* desc);
     bool HasNewItemsInPool();

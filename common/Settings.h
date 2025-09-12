@@ -5,7 +5,7 @@
 #pragma once
 #endif
 
-#include "G:\Ashita\plugins\sdk\ashita.h"
+#include "C:\Ashita\plugins\sdk\ashita.h"
 #include "Output.h"
 #include "thirdparty/rapidxml.hpp"
 #include <filesystem>
@@ -30,7 +30,6 @@ private:
     char* FileBuffer;
     char CurrentFile[256];
     xml_document<>* Document;
-
 
 public:
     SettingsHelper(IAshitaCore* core, OutputHelpers* output, const char* Plugin)
@@ -109,7 +108,7 @@ public:
         if (std::filesystem::exists(buffer))
             return std::string(buffer);
 
-            sprintf_s(buffer, 1024, "%sconfig\\%s\\%s", m_AshitaCore->GetInstallPath(), PluginName, Input);
+        sprintf_s(buffer, 1024, "%sconfig\\%s\\%s", m_AshitaCore->GetInstallPath(), PluginName, Input);
         if (std::filesystem::exists(buffer))
             return std::string(buffer);
 
@@ -137,7 +136,7 @@ public:
         sprintf_s(buffer, 1024, "%sconfig\\%s\\%s\\%s%s", m_AshitaCore->GetInstallPath(), PluginName, PlayerName, Input, Extension);
         if (std::filesystem::exists(buffer))
 
-        sprintf_s(buffer, 1024, "%sconfig\\%s\\%s", m_AshitaCore->GetInstallPath(), PluginName, Input);
+            sprintf_s(buffer, 1024, "%sconfig\\%s\\%s", m_AshitaCore->GetInstallPath(), PluginName, Input);
         if (std::filesystem::exists(buffer))
             return std::string(buffer);
 
@@ -232,7 +231,7 @@ public:
         if (!inputStream.is_open())
             return NULL;
 
-        long Size  = inputStream.tellg();
+        long Size       = inputStream.tellg();
         char* OutBuffer = new char[Size + 1];
         inputStream.seekg(0, ios::beg);
         inputStream.read(OutBuffer, Size);
@@ -285,7 +284,7 @@ public:
         strcpy_s(CurrentFile, 256, Path.c_str());
         return Document;
     }
- 
+
     //Get path to last loaded XML.
     std::string GetLoadedXmlPath()
     {
@@ -306,8 +305,8 @@ public:
             return NULL;
         }
 
-        long Size  = inputStream.tellg();
-        Buffer = new char[Size + 1];
+        long Size = inputStream.tellg();
+        Buffer    = new char[Size + 1];
         inputStream.seekg(0, ios::beg);
         inputStream.read(Buffer, Size);
         Buffer[Size] = '\0';
