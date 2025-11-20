@@ -13,7 +13,7 @@ bool Lootwhore::HandleCommand(int32_t mode, const char* command, bool injected)
         if (argcount == 1)
         {
             m_ShowUI = !m_ShowUI;
-    
+
             // Track that the window was opened manually
             if (m_ShowUI)
             {
@@ -22,14 +22,14 @@ bool Lootwhore::HandleCommand(int32_t mode, const char* command, bool injected)
             }
             return true;
         }
-        
+
         auto iter = mCommandMap.find(args[1]);
         if (iter == mCommandMap.end())
         {
             pOutput->error_f("Command not recognized. [$H%s$R]", args[1].c_str());
             return true;
         }
-        (this->*(iter->second.handler))(args, argcount, iter->second.help);     
+        (this->*(iter->second.handler))(args, argcount, iter->second.help);
         return true;
     }
 
@@ -138,10 +138,10 @@ void Lootwhore::HandleCommandZoneReset(std::vector<string> args, int argcount, C
     pOutput->message_f("ZoneReset $H%s$R.", mProfile.ResetOnZone ? "enabled" : "disabled");
 }
 const char* reactionNames[3] = {
-"Ignore",
-"Lot",
-"Pass"};
-void::Lootwhore::HandleCommandAdd(std::vector<string> args, int argcount, CommandHelp help)
+    "Ignore",
+    "Lot",
+    "Pass"};
+void ::Lootwhore::HandleCommandAdd(std::vector<string> args, int argcount, CommandHelp help)
 {
     if (argcount < 4)
     {
@@ -153,11 +153,11 @@ void::Lootwhore::HandleCommandAdd(std::vector<string> args, int argcount, Comman
     if (CheckArg(3, "lot"))
         reaction = LotReaction::Lot;
     else if (CheckArg(3, "store"))
-        reaction  = LotReaction::Lot;
+        reaction = LotReaction::Lot;
     else if (CheckArg(3, "pass"))
         reaction = LotReaction::Pass;
     else if (CheckArg(3, "drop"))
-        reaction  = LotReaction::Pass;
+        reaction = LotReaction::Pass;
     else if (CheckArg(3, "ignore"))
         reaction = LotReaction::Ignore;
     else
@@ -197,7 +197,7 @@ void Lootwhore::HandleCommandRemove(std::vector<string> args, int argcount, Comm
     if (argcount < 3)
     {
         PrintHelpText(help, true);
-        return;    
+        return;
     }
 
     uint16_t id = 0;
@@ -277,7 +277,7 @@ void Lootwhore::HandleCommandRemoveDrop(std::vector<string> args, int argcount, 
 
     int EraseCount = 0;
 
-    for (std::list<uint16_t>::iterator iter = mProfile.AutoDrop.begin(); iter != mProfile.AutoDrop.end(); )
+    for (std::list<uint16_t>::iterator iter = mProfile.AutoDrop.begin(); iter != mProfile.AutoDrop.end();)
     {
         if (id == *iter)
         {
@@ -303,7 +303,6 @@ void Lootwhore::HandleCommandRemoveDrop(std::vector<string> args, int argcount, 
         pOutput->message_f("$H%s$R removed from drop list.", args[2].c_str());
     else
         pOutput->message_f("$H%d$R items matching $H%s$R were removed from drop list.", EraseCount, args[2].c_str());
-
 }
 void Lootwhore::HandleCommandAddStore(std::vector<string> args, int argcount, CommandHelp help)
 {
@@ -375,12 +374,12 @@ void Lootwhore::HandleCommandRemoveStore(std::vector<string> args, int argcount,
 }
 void Lootwhore::HandleCommandList(std::vector<string> args, int argcount, CommandHelp help)
 {
-    bool PrintDrop      = true;
+    bool PrintDrop  = true;
     bool PrintReact = true;
-    bool PrintStore     = true;
+    bool PrintStore = true;
     if (CheckArg(2, "react"))
     {
-        PrintDrop = false;
+        PrintDrop  = false;
         PrintStore = false;
     }
     else if (CheckArg(2, "drop"))
@@ -390,7 +389,7 @@ void Lootwhore::HandleCommandList(std::vector<string> args, int argcount, Comman
     }
     else if (CheckArg(2, "store"))
     {
-        PrintDrop = false;
+        PrintDrop  = false;
         PrintReact = false;
     }
     else if (argcount > 2)
@@ -404,7 +403,7 @@ void Lootwhore::HandleCommandList(std::vector<string> args, int argcount, Comman
         pOutput->message("Reaction List");
         for (std::map<uint16_t, LotReaction>::iterator iter = mProfile.ItemMap.begin(); iter != mProfile.ItemMap.end(); iter++)
         {
-            IItem* item = m_AshitaCore->GetResourceManager()->GetItemById(iter->first);
+            IItem* item        = m_AshitaCore->GetResourceManager()->GetItemById(iter->first);
             std::string Action = "Ignore";
             if (iter->second == LotReaction::Lot)
                 Action = "Lot";
@@ -412,7 +411,7 @@ void Lootwhore::HandleCommandList(std::vector<string> args, int argcount, Comman
                 Action = "Pass";
 
             pOutput->message_f("$H%s$R : $H%s$R", item->Name[0], Action.c_str());
-        }    
+        }
     }
 
     if (PrintDrop)
@@ -420,9 +419,9 @@ void Lootwhore::HandleCommandList(std::vector<string> args, int argcount, Comman
         pOutput->message("Drop List");
         for (std::list<uint16_t>::iterator iter = mProfile.AutoDrop.begin(); iter != mProfile.AutoDrop.end(); iter++)
         {
-            IItem* item        = m_AshitaCore->GetResourceManager()->GetItemById(*iter);
-            pOutput->message_f("$H%s$R : $HDrop$R", item->Name[0]);        
-        }    
+            IItem* item = m_AshitaCore->GetResourceManager()->GetItemById(*iter);
+            pOutput->message_f("$H%s$R : $HDrop$R", item->Name[0]);
+        }
     }
 
     if (PrintStore)
@@ -497,10 +496,9 @@ void Lootwhore::HandleCommandPass(std::vector<string> args, int argcount, Comman
     if (PassCount == 0)
         pOutput->message("There were no valid items to pass.");
     else if (PassCount == 1)
-        pOutput->message_f("Sending pass packet for $H%d$R item.", PassCount);   
+        pOutput->message_f("Sending pass packet for $H%d$R item.", PassCount);
     else
         pOutput->message_f("Sending pass packets for $H%d$R items.", PassCount);
-
 }
 void Lootwhore::HandleCommandHelp(std::vector<string> args, int argcount, CommandHelp help)
 {

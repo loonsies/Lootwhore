@@ -110,7 +110,7 @@ void Lootwhore::RenderUI()
     {
         m_ShowUI               = true;
         m_WindowOpenedManually = false; // Mark as automatically opened
-        UpdatePoolItemTracking(); // Update tracking only when auto-opening
+        UpdatePoolItemTracking();       // Update tracking only when auto-opening
     }
 
     // Auto-close logic: close if enabled, was opened automatically, and conditions are met
@@ -284,7 +284,7 @@ void Lootwhore::CreateNewProfile()
     }
 
     std::string profileName(m_NewProfileName);
-    
+
     // Check if profile already exists
     bool profileExists = false;
     for (const auto& existingProfile : m_ProfileList)
@@ -322,7 +322,7 @@ void Lootwhore::CreateNewProfile()
         }
 
         pOutput->message_f("Created new profile: %s", profileName.c_str());
-        m_ShowCreateProfileModal = false;
+        m_ShowCreateProfileModal   = false;
         m_ProfileNameAlreadyExists = false;
         memset(m_NewProfileName, 0, sizeof(m_NewProfileName));
     }
@@ -334,7 +334,7 @@ void Lootwhore::DeleteSelectedProfile()
         return;
 
     std::string profileName = m_ProfileList[m_SelectedProfileIndex];
-    
+
     // Show confirmation modal instead of immediately deleting
     m_ShowConfirmationModal = true;
     m_ConfirmationMessage   = "Are you sure you want to delete the profile:\n\n" + profileName + "?";
@@ -349,7 +349,7 @@ void Lootwhore::SaveCurrentProfile()
         return;
 
     std::string profileName = m_ProfileList[m_SelectedProfileIndex];
-    
+
     // Show confirmation modal before overwriting
     m_ShowConfirmationModal = true;
     m_ConfirmationMessage   = "Are you sure you want to save over the profile:\n\n" + profileName + "?";
@@ -472,7 +472,7 @@ void Lootwhore::RenderCreateProfileModal()
                 // If profile exists, CreateNewProfile will show confirmation modal
                 if (!m_ShowConfirmationModal)
                 {
-                    m_ShowCreateProfileModal = false;
+                    m_ShowCreateProfileModal   = false;
                     m_ProfileNameAlreadyExists = false;
                     imgui->CloseCurrentPopup();
                 }
@@ -514,10 +514,10 @@ void Lootwhore::RenderConfirmationModal()
         imgui->Separator();
 
         // Calculate remaining time
-        auto now = std::chrono::steady_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - m_ConfirmationStartTime).count();
+        auto now             = std::chrono::steady_clock::now();
+        auto elapsed         = std::chrono::duration_cast<std::chrono::seconds>(now - m_ConfirmationStartTime).count();
         int remainingSeconds = CONFIRMATION_TIMER_SECONDS - static_cast<int>(elapsed);
-        
+
         if (remainingSeconds < 0)
             remainingSeconds = 0;
 
@@ -525,7 +525,7 @@ void Lootwhore::RenderConfirmationModal()
 
         // OK button - only clickable after timer expires
         bool canConfirm = (remainingSeconds <= 0);
-        
+
         // Create button label with timer or "OK"
         char buttonLabel[32];
         if (canConfirm)
@@ -536,7 +536,7 @@ void Lootwhore::RenderConfirmationModal()
         {
             snprintf(buttonLabel, sizeof(buttonLabel), "OK (%d)", remainingSeconds);
         }
-        
+
         // Change button appearance based on whether timer has expired
         if (!canConfirm)
         {
@@ -544,7 +544,7 @@ void Lootwhore::RenderConfirmationModal()
         }
 
         bool buttonPressed = imgui->Button(buttonLabel, ImVec2(120, 0));
-        
+
         if (!canConfirm)
         {
             imgui->PopStyleVar();
@@ -591,9 +591,9 @@ void Lootwhore::RenderConfirmationModal()
                 }
 
                 pOutput->message_f("Overwritten profile: %s", m_ConfirmationTarget.c_str());
-                
+
                 // Close the create profile modal as well
-                m_ShowCreateProfileModal = false;
+                m_ShowCreateProfileModal   = false;
                 m_ProfileNameAlreadyExists = false;
                 memset(m_NewProfileName, 0, sizeof(m_NewProfileName));
             }
@@ -606,9 +606,9 @@ void Lootwhore::RenderConfirmationModal()
 
             // Close the confirmation modal
             m_ShowConfirmationModal = false;
-            m_ConfirmationMessage = "";
-            m_ConfirmationAction = "";
-            m_ConfirmationTarget = "";
+            m_ConfirmationMessage   = "";
+            m_ConfirmationAction    = "";
+            m_ConfirmationTarget    = "";
             imgui->CloseCurrentPopup();
         }
 
@@ -616,9 +616,9 @@ void Lootwhore::RenderConfirmationModal()
         if (imgui->Button("Cancel", ImVec2(120, 0)))
         {
             m_ShowConfirmationModal = false;
-            m_ConfirmationMessage = "";
-            m_ConfirmationAction = "";
-            m_ConfirmationTarget = "";
+            m_ConfirmationMessage   = "";
+            m_ConfirmationAction    = "";
+            m_ConfirmationTarget    = "";
             imgui->CloseCurrentPopup();
         }
 
