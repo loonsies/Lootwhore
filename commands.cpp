@@ -18,6 +18,7 @@ bool Lootwhore::HandleCommand(int32_t mode, const char* command, bool injected)
             if (m_ShowUI)
             {
                 m_WindowOpenedManually = true;
+                UpdatePoolItemTracking(); // Update tracking when manually opening
             }
             return true;
         }

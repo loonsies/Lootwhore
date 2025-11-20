@@ -50,6 +50,14 @@ private:
     bool m_ShowCreateProfileModal;
     bool m_ProfileNameAlreadyExists;
 
+    // Modal state for confirmation dialogs (delete/overwrite)
+    bool m_ShowConfirmationModal;
+    std::string m_ConfirmationMessage;
+    std::string m_ConfirmationAction; // "delete", "overwrite", etc.
+    std::string m_ConfirmationTarget; // profile name or other target
+    std::chrono::steady_clock::time_point m_ConfirmationStartTime;
+    const int CONFIRMATION_TIMER_SECONDS = 5;
+
     // Item preview and search functionality
     uint16_t m_SelectedItemId;
     int m_SelectedItemSlot;
@@ -159,6 +167,7 @@ public:
     void SaveCurrentProfile();
     void RenderProfileControls();
     void RenderCreateProfileModal();
+    void RenderConfirmationModal();
     void RenderLootPoolTab();
     void RenderAutoDropTab();
     void RenderIgnoreTab();

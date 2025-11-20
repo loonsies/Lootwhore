@@ -65,8 +65,14 @@ bool Lootwhore::Initialize(IAshitaCore* core, ILogManager* logger, const uint32_
     m_ShowCreateProfileModal   = false;
     m_ProfileNameAlreadyExists = false;
 
+    // Initialize confirmation modal
+    m_ShowConfirmationModal = false;
+    m_ConfirmationMessage   = "";
+    m_ConfirmationAction    = "";
+    m_ConfirmationTarget    = "";
+
     // Initialize item preview and search
-    m_SelectedItemId = 0;
+    m_SelectedItemId   = 0;
     m_SelectedItemSlot = -1;
     memset(m_SearchBuffer, 0, sizeof(m_SearchBuffer));
     m_ShowItemPreview = false;

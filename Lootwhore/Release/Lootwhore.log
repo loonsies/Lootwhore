@@ -16,11 +16,13 @@ C:\Users\looney\Lootwhore\common\Settings.h(308,19): warning C4244: 'initializin
   
      Creating library Release\Lootwhore.lib and object Release\Lootwhore.exp
   Generating code
-  1 of 1820 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  1 of 1821 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    6 functions had inline decision re-evaluated but remain unchanged
+    10 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Lootwhore.vcxproj -> C:\Users\looney\Lootwhore\Release\Lootwhore.dll
+  'pwsh.exe' is not recognized as an internal or external command,
+  operable program or batch file.
           1 file(s) copied.
   Invalid path
   0 File(s) copied
@@ -28,13 +30,13 @@ C:\Users\looney\Lootwhore\common\Settings.h(308,19): warning C4244: 'initializin
   7-Zip 25.00 (x64) : Copyright (c) 1999-2025 Igor Pavlov : 2025-07-05
   
   Scanning the drive:
-  1 folder, 1 file, 204288 bytes (200 KiB)
+  1 folder, 1 file, 208384 bytes (204 KiB)
   
   Creating archive: Lootwhore.zip
   
-  Add new data to archive: 1 folder, 1 file, 204288 bytes (200 KiB)
+  Add new data to archive: 1 folder, 1 file, 208384 bytes (204 KiB)
   
   
   Files read from disk: 1
-  Archive size: 84761 bytes (83 KiB)
+  Archive size: 86322 bytes (85 KiB)
   Everything is Ok

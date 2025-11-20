@@ -110,6 +110,7 @@ void Lootwhore::RenderUI()
     {
         m_ShowUI               = true;
         m_WindowOpenedManually = false; // Mark as automatically opened
+        UpdatePoolItemTracking(); // Update tracking only when auto-opening
     }
 
     // Auto-close logic: close if enabled, was opened automatically, and conditions are met
@@ -123,7 +124,7 @@ void Lootwhore::RenderUI()
             shouldClose = true;
         }
 
-        // Au-to-close: when all items are handled or automatic
+        // Auto-close: when all items are handled or automatic
         if (mSettings.AutoCloseWhenHandled && hasActiveItems && AllItemsHandledOrAutomatic())
         {
             shouldClose = true;
@@ -136,9 +137,6 @@ void Lootwhore::RenderUI()
             return;
         }
     }
-
-    // Update pool tracking for next frame
-    UpdatePoolItemTracking();
 
     if (!m_ShowUI)
         return;
@@ -156,7 +154,7 @@ void Lootwhore::RenderUI()
     if (imgui->Begin(windowTitle.c_str(), &m_ShowUI))
     {
         // Apply UI scaling to this window only
-        imgui->SetWindowFontScale(mSettings.UIScale);
+        imgui->PushFont(imgui->GetFont(), imgui->GetFontSize() * mSettings.UIScale);
         RenderProfileControls();
 
         imgui->Separator();
@@ -202,6 +200,7 @@ void Lootwhore::RenderUI()
 
             imgui->EndTabBar();
         }
+        imgui->PopFont();
     }
     imgui->End();
 
@@ -209,10 +208,12 @@ void Lootwhore::RenderUI()
     if (!m_ShowUI)
     {
         m_WindowOpenedManually = false;
+        UpdatePoolItemTracking(); // Update tracking when manually closing
     }
 
     // Render modals
     RenderCreateProfileModal();
+    RenderConfirmationModal();
 }
 
 void Lootwhore::LoadProfileList()
@@ -283,20 +284,48 @@ void Lootwhore::CreateNewProfile()
     }
 
     std::string profileName(m_NewProfileName);
-    SaveProfile(profileName.c_str(), true);
-    LoadProfileList();
-
-    // Find and select the new profile
-    for (size_t i = 0; i < m_ProfileList.size(); i++)
+    
+    // Check if profile already exists
+    bool profileExists = false;
+    for (const auto& existingProfile : m_ProfileList)
     {
-        if (m_ProfileList[i] == profileName)
+        if (existingProfile == profileName)
         {
-            m_SelectedProfileIndex = static_cast<int>(i);
+            profileExists = true;
             break;
         }
     }
 
-    pOutput->message_f("Created new profile: %s", profileName.c_str());
+    if (profileExists)
+    {
+        // Show confirmation modal for overwriting
+        m_ShowConfirmationModal = true;
+        m_ConfirmationMessage   = "A profile with this name already exists:\n\n" + profileName + "\n\nDo you want to overwrite it?";
+        m_ConfirmationAction    = "overwrite";
+        m_ConfirmationTarget    = profileName;
+        m_ConfirmationStartTime = std::chrono::steady_clock::now();
+    }
+    else
+    {
+        // Create new profile directly
+        SaveProfile(profileName.c_str(), true);
+        LoadProfileList();
+
+        // Find and select the new profile
+        for (size_t i = 0; i < m_ProfileList.size(); i++)
+        {
+            if (m_ProfileList[i] == profileName)
+            {
+                m_SelectedProfileIndex = static_cast<int>(i);
+                break;
+            }
+        }
+
+        pOutput->message_f("Created new profile: %s", profileName.c_str());
+        m_ShowCreateProfileModal = false;
+        m_ProfileNameAlreadyExists = false;
+        memset(m_NewProfileName, 0, sizeof(m_NewProfileName));
+    }
 }
 
 void Lootwhore::DeleteSelectedProfile()
@@ -305,23 +334,13 @@ void Lootwhore::DeleteSelectedProfile()
         return;
 
     std::string profileName = m_ProfileList[m_SelectedProfileIndex];
-    std::string profilePath = m_AshitaCore->GetInstallPath();
-    profilePath += "config\\lootwhore\\profiles\\" + profileName + ".xml";
-
-    try
-    {
-        if (std::filesystem::exists(profilePath))
-        {
-            std::filesystem::remove(profilePath);
-            pOutput->message_f("Deleted profile: %s", profileName.c_str());
-            LoadProfileList();
-            m_SelectedProfileIndex = 0;
-        }
-    }
-    catch (const std::exception& e)
-    {
-        pOutput->error_f("Error deleting profile: %s", e.what());
-    }
+    
+    // Show confirmation modal instead of immediately deleting
+    m_ShowConfirmationModal = true;
+    m_ConfirmationMessage   = "Are you sure you want to delete the profile:\n\n" + profileName + "?";
+    m_ConfirmationAction    = "delete";
+    m_ConfirmationTarget    = profileName;
+    m_ConfirmationStartTime = std::chrono::steady_clock::now();
 }
 
 void Lootwhore::SaveCurrentProfile()
@@ -330,8 +349,13 @@ void Lootwhore::SaveCurrentProfile()
         return;
 
     std::string profileName = m_ProfileList[m_SelectedProfileIndex];
-    SaveProfile(profileName.c_str(), true);
-    pOutput->message_f("Saved current settings to profile: %s", profileName.c_str());
+    
+    // Show confirmation modal before overwriting
+    m_ShowConfirmationModal = true;
+    m_ConfirmationMessage   = "Are you sure you want to save over the profile:\n\n" + profileName + "?";
+    m_ConfirmationAction    = "save";
+    m_ConfirmationTarget    = profileName;
+    m_ConfirmationStartTime = std::chrono::steady_clock::now();
 }
 
 void Lootwhore::RenderProfileControls()
@@ -418,7 +442,7 @@ void Lootwhore::RenderCreateProfileModal()
     if (imgui->BeginPopupModal("Create New Profile", nullptr, ImGuiWindowFlags_NoResize))
     {
         // Apply UI scaling to this modal window only
-        imgui->SetWindowFontScale(mSettings.UIScale);
+        imgui->PushFont(imgui->GetFont(), imgui->GetFontSize() * mSettings.UIScale);
 
         imgui->Text("Enter a name for creating a new profile");
         imgui->Separator();
@@ -443,26 +467,12 @@ void Lootwhore::RenderCreateProfileModal()
         {
             if (strlen(m_NewProfileName) > 0)
             {
-                // Check if profile already exists
-                std::string profileName(m_NewProfileName);
-                bool profileExists = false;
-                for (const auto& existingProfile : m_ProfileList)
+                CreateNewProfile();
+                // If profile didn't exist, modals get closed automatically
+                // If profile exists, CreateNewProfile will show confirmation modal
+                if (!m_ShowConfirmationModal)
                 {
-                    if (existingProfile == profileName)
-                    {
-                        profileExists = true;
-                        break;
-                    }
-                }
-
-                if (profileExists)
-                {
-                    m_ProfileNameAlreadyExists = true;
-                }
-                else
-                {
-                    CreateNewProfile();
-                    m_ShowCreateProfileModal   = false;
+                    m_ShowCreateProfileModal = false;
                     m_ProfileNameAlreadyExists = false;
                     imgui->CloseCurrentPopup();
                 }
@@ -477,6 +487,142 @@ void Lootwhore::RenderCreateProfileModal()
             imgui->CloseCurrentPopup();
         }
 
+        imgui->PopFont();
+        imgui->EndPopup();
+    }
+}
+
+void Lootwhore::RenderConfirmationModal()
+{
+    auto imgui = m_AshitaCore->GetGuiManager();
+    if (!imgui)
+        return;
+
+    if (!m_ShowConfirmationModal)
+        return;
+
+    imgui->SetNextWindowSize(ImVec2(0, 0), ImGuiCond_Always);
+    imgui->OpenPopup("Confirm Action");
+
+    if (imgui->BeginPopupModal("Confirm Action", nullptr, ImGuiWindowFlags_NoResize))
+    {
+        // Apply UI scaling to this modal window only
+        imgui->PushFont(imgui->GetFont(), imgui->GetFontSize() * mSettings.UIScale);
+
+        // Display the confirmation message
+        imgui->Text("%s", m_ConfirmationMessage.c_str());
+        imgui->Separator();
+
+        // Calculate remaining time
+        auto now = std::chrono::steady_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - m_ConfirmationStartTime).count();
+        int remainingSeconds = CONFIRMATION_TIMER_SECONDS - static_cast<int>(elapsed);
+        
+        if (remainingSeconds < 0)
+            remainingSeconds = 0;
+
+        imgui->Spacing();
+
+        // OK button - only clickable after timer expires
+        bool canConfirm = (remainingSeconds <= 0);
+        
+        // Create button label with timer or "OK"
+        char buttonLabel[32];
+        if (canConfirm)
+        {
+            snprintf(buttonLabel, sizeof(buttonLabel), "OK");
+        }
+        else
+        {
+            snprintf(buttonLabel, sizeof(buttonLabel), "OK (%d)", remainingSeconds);
+        }
+        
+        // Change button appearance based on whether timer has expired
+        if (!canConfirm)
+        {
+            imgui->PushStyleVar(ImGuiStyleVar_Alpha, 0.5f);
+        }
+
+        bool buttonPressed = imgui->Button(buttonLabel, ImVec2(120, 0));
+        
+        if (!canConfirm)
+        {
+            imgui->PopStyleVar();
+            buttonPressed = false; // Prevent action even if clicked
+        }
+
+        if (buttonPressed && canConfirm)
+        {
+            // Perform the action
+            if (m_ConfirmationAction == "delete")
+            {
+                std::string profilePath = m_AshitaCore->GetInstallPath();
+                profilePath += "config\\lootwhore\\profiles\\" + m_ConfirmationTarget + ".xml";
+
+                try
+                {
+                    if (std::filesystem::exists(profilePath))
+                    {
+                        std::filesystem::remove(profilePath);
+                        pOutput->message_f("Deleted profile: %s", m_ConfirmationTarget.c_str());
+                        LoadProfileList();
+                        m_SelectedProfileIndex = 0;
+                    }
+                }
+                catch (const std::exception& e)
+                {
+                    pOutput->error_f("Error deleting profile: %s", e.what());
+                }
+            }
+            else if (m_ConfirmationAction == "overwrite")
+            {
+                // Perform the overwrite
+                SaveProfile(m_ConfirmationTarget.c_str(), true);
+                LoadProfileList();
+
+                // Find and select the profile
+                for (size_t i = 0; i < m_ProfileList.size(); i++)
+                {
+                    if (m_ProfileList[i] == m_ConfirmationTarget)
+                    {
+                        m_SelectedProfileIndex = static_cast<int>(i);
+                        break;
+                    }
+                }
+
+                pOutput->message_f("Overwritten profile: %s", m_ConfirmationTarget.c_str());
+                
+                // Close the create profile modal as well
+                m_ShowCreateProfileModal = false;
+                m_ProfileNameAlreadyExists = false;
+                memset(m_NewProfileName, 0, sizeof(m_NewProfileName));
+            }
+            else if (m_ConfirmationAction == "save")
+            {
+                // Save the current profile
+                SaveProfile(m_ConfirmationTarget.c_str(), true);
+                pOutput->message_f("Saved current settings to profile: %s", m_ConfirmationTarget.c_str());
+            }
+
+            // Close the confirmation modal
+            m_ShowConfirmationModal = false;
+            m_ConfirmationMessage = "";
+            m_ConfirmationAction = "";
+            m_ConfirmationTarget = "";
+            imgui->CloseCurrentPopup();
+        }
+
+        imgui->SameLine();
+        if (imgui->Button("Cancel", ImVec2(120, 0)))
+        {
+            m_ShowConfirmationModal = false;
+            m_ConfirmationMessage = "";
+            m_ConfirmationAction = "";
+            m_ConfirmationTarget = "";
+            imgui->CloseCurrentPopup();
+        }
+
+        imgui->PopFont();
         imgui->EndPopup();
     }
 }
@@ -490,7 +636,7 @@ void Lootwhore::RenderLootPoolTab()
     imgui->PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4.0f, 0.0f));
     imgui->PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2.0f, 2.0f));
     imgui->PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4.0f, 2.0f));
-    
+
     if (imgui->BeginTable("LootPoolTable", 5, ImGuiTableFlags_RowBg | ImGuiTableFlags_SizingFixedFit))
     {
         imgui->TableSetupColumn("Item", ImGuiTableColumnFlags_WidthStretch, 200.0f);
@@ -519,15 +665,15 @@ void Lootwhore::RenderLootPoolTab()
                     {
                         if (m_SelectedItemId == pTreasureItem->ItemId && m_SelectedItemSlot == i)
                         {
-                            m_ShowItemPreview = false;
-                            m_SelectedItemId = 0;
+                            m_ShowItemPreview  = false;
+                            m_SelectedItemId   = 0;
                             m_SelectedItemSlot = -1;
                         }
                         else
                         {
-                            m_SelectedItemId  = pTreasureItem->ItemId;
+                            m_SelectedItemId   = pTreasureItem->ItemId;
                             m_SelectedItemSlot = i;
-                            m_ShowItemPreview = true;
+                            m_ShowItemPreview  = true;
                         }
                     }
                 }
@@ -538,22 +684,23 @@ void Lootwhore::RenderLootPoolTab()
                     {
                         if (m_SelectedItemId == pTreasureItem->ItemId && m_SelectedItemSlot == i)
                         {
-                            m_ShowItemPreview = false;
-                            m_SelectedItemId = 0;
+                            m_ShowItemPreview  = false;
+                            m_SelectedItemId   = 0;
                             m_SelectedItemSlot = -1;
                         }
                         else
                         {
-                            m_SelectedItemId  = pTreasureItem->ItemId;
+                            m_SelectedItemId   = pTreasureItem->ItemId;
                             m_SelectedItemSlot = i;
-                            m_ShowItemPreview = true;
+                            m_ShowItemPreview  = true;
                         }
                     }
                 }
             }
             else
             {
-                imgui->Selectable("Empty", false, ImGuiSelectableFlags_Disabled, ImVec2(0, rowHeight));
+                std::string emptyId = "Empty##" + std::to_string(i);
+                imgui->Selectable(emptyId.c_str(), false, ImGuiSelectableFlags_Disabled, ImVec2(0, rowHeight));
             }
 
             imgui->TableSetColumnIndex(1);
@@ -678,12 +825,12 @@ void Lootwhore::RenderLootPoolTab()
                 }
                 if (canLot)
                 {
-                    imgui->SetWindowFontScale(0.75f * mSettings.UIScale);
+                    imgui->PushFont(imgui->GetFont(), imgui->GetFontSize() * 0.75f);
                     if (imgui->Button(("Lot##" + std::to_string(i)).c_str(), ImVec2(35.0f * mSettings.UIScale, rowHeight - 2.0f)))
                     {
                         LotItem(i);
                     }
-                    imgui->SetWindowFontScale(mSettings.UIScale);
+                    imgui->PopFont();
                     imgui->SameLine();
                 }
 
@@ -698,22 +845,22 @@ void Lootwhore::RenderLootPoolTab()
                 }
                 if (canPass)
                 {
-                    imgui->SetWindowFontScale(0.75f * mSettings.UIScale);
+                    imgui->PushFont(imgui->GetFont(), imgui->GetFontSize() * 0.75f);
                     if (imgui->Button(("Pass##" + std::to_string(i)).c_str(), ImVec2(40.0f * mSettings.UIScale, rowHeight - 2.0f)))
                     {
                         PassItem(i);
                     }
-                    imgui->SetWindowFontScale(mSettings.UIScale);
+                    imgui->PopFont();
                     imgui->SameLine();
                 }
 
                 // Add to dropdown menu (left-click)
-                imgui->SetWindowFontScale(0.75f * mSettings.UIScale);
+                imgui->PushFont(imgui->GetFont(), imgui->GetFontSize() * 0.75f);
                 if (imgui->Button(("Auto##" + std::to_string(i)).c_str(), ImVec2(40.0f * mSettings.UIScale, rowHeight - 2.0f)))
                 {
                     imgui->OpenPopup(("AddToPopup##" + std::to_string(i)).c_str());
                 }
-                imgui->SetWindowFontScale(mSettings.UIScale);
+                imgui->PopFont();
 
                 // Right-click context menu for quick add to pass/drop
                 if (imgui->IsItemClicked(ImGuiMouseButton_Right))
@@ -835,21 +982,21 @@ void Lootwhore::RenderLootPoolTab()
                 if (imgui->BeginPopup(("QuickAddPopup##" + std::to_string(i)).c_str()))
                 {
                     IItem* pItem = m_AshitaCore->GetResourceManager()->GetItemById(pTreasureItem->ItemId);
-                    
+
                     if (imgui->MenuItem("Add to Pass List"))
                     {
                         mProfile.ItemMap[pTreasureItem->ItemId] = LotReaction::Pass;
                         if (pItem)
                             pOutput->message_f("Added %s to pass list.", pItem->Name[0]);
                     }
-                    
+
                     if (imgui->MenuItem("Add to Drop List"))
                     {
                         mProfile.AutoDrop.push_back(pTreasureItem->ItemId);
                         if (pItem)
                             pOutput->message_f("Added %s to auto drop list.", pItem->Name[0]);
                     }
-                    
+
                     imgui->EndPopup();
                 }
             }
@@ -861,7 +1008,7 @@ void Lootwhore::RenderLootPoolTab()
 
         imgui->EndTable();
     }
-    
+
     imgui->PopStyleVar(3);
 
     // Lot All and Pass All buttons
