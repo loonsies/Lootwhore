@@ -23,7 +23,7 @@
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{f0194c65-a9e4-47df-b50f-7a01d68c53e9}</ProjectGuid>
     <RootNamespace>Lootwhore</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -40,10 +40,10 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -95,6 +95,7 @@
       <StringPooling>true</StringPooling>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <FunctionLevelLinking>true</FunctionLevelLinking>
+      <AdditionalIncludeDirectories>$(ASHITA4_INSTALL_DIRECTORY)plugins\sdk\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -102,7 +103,7 @@
       <ModuleDefinitionFile>exports.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>copy "Debug\$(ProjectName)_debug.dll" "C:\Users\Garre\FFXI\Ashita 4\plugins\$(ProjectName)_debug.dll"</Command>
+      <Command>copy "Debug\$(ProjectName)_debug.dll" "$(ASHITA4_INSTALL_DIRECTORY)plugins\$(ProjectName)_debug.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -117,6 +118,7 @@
       <StringPooling>true</StringPooling>
       <ExceptionHandling>Async</ExceptionHandling>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ASHITA4_INSTALL_DIRECTORY)plugins\sdk\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,7 +132,7 @@
 if not exist "build\plugins" mkdir "build\plugins"
 if exist "build\$(ProjectName).zip" del "build\$(ProjectName).zip"
 copy "Release\$(ProjectName).dll" "$(SolutionDir)build\plugins\$(ProjectName).dll"
-xcopy "$(SolutionDir)build\*" "C:\Users\Garre\FFXI\Ashita 4\" /i /e /Y
+xcopy "$(SolutionDir)build\*" "$(ASHITA4_INSTALL_DIRECTORY)" /i /e /Y
 cd build
 "C:\Program Files\7-Zip\7z.exe" a $(ProjectName).zip * -x!*.zip</Command>
     </PostBuildEvent>

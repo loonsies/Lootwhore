@@ -1,4 +1,5 @@
 LIBRARY "Lootwhore"
 EXPORTS
 	expCreatePlugin
+	expDestroyPlugin
 	expGetInterfaceVersion
