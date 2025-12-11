@@ -5,11 +5,11 @@
 #pragma once
 #endif
 
-#include "C:\Ashita\plugins\sdk\ashita.h"
-#include "common\Utilities.h"
-#include "common\Output.h"
-#include "common\Settings.h"
-#include "common\safePacketInjector.h"
+#include "Ashita.h"
+#include "..\common\Utilities.h"
+#include "..\common\Output.h"
+#include "..\common\Settings.h"
+#include "..\common\safePacketInjector.h"
 #include "Structs.h"
 #include <random>
 
